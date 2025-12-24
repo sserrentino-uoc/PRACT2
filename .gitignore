@@ -1,0 +1,19 @@
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Logs y temporales
+logs/
+*.log
+200
+404
+
+# SO/Editor
+.DS_Store
+.vscode/
+
+# Zip y 7z
+*.7z
+*.zip
+*.rar
