@@ -6,7 +6,7 @@
 
 **Repositorio**: https://github.com/sserrentino-uoc/PRACT2.git
 
-**Vídeo**: https://drive.google.com/drive/folders/1dk2uFpQxzli5zU93pwyTc5lT9NIQDO-h?usp=drive_link
+**Vídeo**: https://drive.google.com/file/d/1tnYbskKgCPtXX6o70qJ0-3UyY5_nEG31/view?usp=drive_link
 
 Fecha de generación: **2026-01-03**
 
@@ -170,7 +170,7 @@ A partir del proceso de limpieza y del análisis posterior, se obtienen las sigu
 El código fuente se encuentra en `src/`. Para ejecutar el pipeline: `python -m src.run_all`.
 
 ## 8. Vídeo
-Enlace al vídeo (Google Drive UOC): https://drive.google.com/drive/folders/1dk2uFpQxzli5zU93pwyTc5lT9NIQDO-h?usp=drive_link
+Enlace al vídeo (Google Drive UOC): https://drive.google.com/file/d/1tnYbskKgCPtXX6o70qJ0-3UyY5_nEG31/view?usp=drive_link
 
 ## Tabla de contribuciones
 | Contribuciones | Firma |

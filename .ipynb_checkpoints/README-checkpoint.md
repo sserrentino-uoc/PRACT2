@@ -1,14 +1,14 @@
 # PRACT2 — Adult Income (Python)
 
 ## Integrantes
-- SEBASTIAN SERRENTINO (Integrante 1) — iniciales: SS
-- ALBERTO MOCHON (Integrante 2) — iniciales: AM
+- SEBASTIAN SERRENTINO — iniciales: SS
+- ALBERTO MOCHON — iniciales: AM
 
 Fuente de Datos: Becker, B. & Kohavi, R. (1996). Adult [Dataset]. UCI Machine Learning Repository. https://doi.org/10.24432/C5XW20.
 
-Repositorio GitHub: PENDIENTE
+Repositorio GitHub: https://github.com/sserrentino-uoc/PRACT2-BPS
 
-Vídeo (Google Drive UOC): PENDIENTE
+Vídeo (Google Drive UOC): https://drive.google.com/file/d/1tnYbskKgCPtXX6o70qJ0-3UyY5_nEG31/view?usp=drive_link
 
 ## Estructura
 - `src/`: código fuente (pipeline end-to-end)
