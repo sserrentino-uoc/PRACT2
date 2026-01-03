@@ -1,7 +1,7 @@
 # Práctica 2 — Análisis del dataset Adult Income (Python)
 
 **Integrantes**
-- SEBASTIAN SERRENTINO
+- SEBASTIAN SERRENTINO MANGINO
 - ALBERTO MOCHON
 
 **Repositorio**: https://github.com/sserrentino-uoc/PRACT2.git
