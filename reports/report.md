@@ -1,14 +1,14 @@
 # Práctica 2 — Análisis del dataset Adult Income (Python)
 
 **Integrantes**
-- SEBASTIAN SERRENTINO MANGINO (Integrante 1)
-- ALBERTO MOCHON (Integrante 2)
+- SEBASTIAN SERRENTINO MANGINO
+- ALBERTO MOCHON
 
 **Repositorio**: https://github.com/sserrentino-uoc/PRACT2.git
 
 **Vídeo**: https://drive.google.com/drive/folders/1dk2uFpQxzli5zU93pwyTc5lT9NIQDO-h?usp=drive_link
 
-Fecha de generación: **2025-12-24**
+Fecha de generación: **2026-01-03**
 
 ## 1. Descripción del dataset
 Trabajamos con el dataset **Adult Income** (UCI), cuyo objetivo es analizar qué variables socio-demográficas y laborales se asocian con la probabilidad de percibir ingresos **>50K**.
