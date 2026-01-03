@@ -80,9 +80,7 @@ def _missing_table(df: pd.DataFrame) -> pd.DataFrame:
     """
     missing_count = df.isna().sum()
     missing_pct = (missing_count / len(df)) * 100
-    out = pd.DataFrame(
-        {"missing_count": missing_count, "missing_pct": missing_pct}
-    )
+    out = pd.DataFrame({"missing_count": missing_count, "missing_pct": missing_pct})
     return out.sort_values("missing_count", ascending=False)
 
 

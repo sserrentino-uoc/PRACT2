@@ -26,11 +26,9 @@ from urllib.request import urlopen
 
 import pandas as pd
 
-from .utils import ensure_dirs, project_root
+from .utils import ensure_dirs
 
-UCI_BASE = (
-    "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/"
-)
+UCI_BASE = "https://archive.ics.uci.edu/ml/machine-learning-databases/adult/"
 UCI_TRAIN = UCI_BASE + "adult.data"
 UCI_TEST = UCI_BASE + "adult.test"
 
@@ -127,16 +125,12 @@ def _load_from_zip(zip_path: Path) -> Tuple[pd.DataFrame, pd.DataFrame]:
                 test_name = name
 
         if not train_name or not test_name:
-            raise FileNotFoundError(
-                "adult.zip no contiene adult.data y adult.test."
-            )
+            raise FileNotFoundError("adult.zip no contiene adult.data y adult.test.")
 
         train_text = zf.read(train_name).decode("utf-8", errors="replace")
         test_text = zf.read(test_name).decode("utf-8", errors="replace")
 
-    return _parse_adult_text(train_text, False), _parse_adult_text(
-        test_text, True
-    )
+    return _parse_adult_text(train_text, False), _parse_adult_text(test_text, True)
 
 
 def _load_local_files(
@@ -159,9 +153,7 @@ def _load_local_files(
     """
     train_text = train_path.read_text(encoding="utf-8", errors="replace")
     test_text = test_path.read_text(encoding="utf-8", errors="replace")
-    return _parse_adult_text(train_text, False), _parse_adult_text(
-        test_text, True
-    )
+    return _parse_adult_text(train_text, False), _parse_adult_text(test_text, True)
 
 
 def main() -> Path:
@@ -208,6 +200,7 @@ def main() -> Path:
     df.to_csv(out_csv, index=False)
     print(f"[download_uci] Wrote: {out_csv} ({len(df)} rows)")
     return out_csv
+
 
 if __name__ == "__main__":
     main()

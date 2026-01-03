@@ -55,7 +55,9 @@ def _wrap_line(text: str, max_width: float, font: str, size: int) -> List[str]:
     return lines
 
 
-def _wrap_preserving_pipes(line: str, max_width: float, font: str, size: int) -> List[str]:
+def _wrap_preserving_pipes(
+    line: str, max_width: float, font: str, size: int
+) -> List[str]:
     """
     Wrap para líneas de tabla Markdown sin romper de forma agresiva la estructura.
     Estrategia: wrap por ancho, pero si excede y no hay espacios suficientes,
@@ -72,7 +74,7 @@ def _wrap_preserving_pipes(line: str, max_width: float, font: str, size: int) ->
     # Fallback: corte por caracteres aproximado
     avg_char_w = stringWidth("X", font, size) or 6.0
     max_chars = max(20, int(max_width / avg_char_w))
-    out = [line[i:i + max_chars] for i in range(0, len(line), max_chars)]
+    out = [line[i : i + max_chars] for i in range(0, len(line), max_chars)]
     return out
 
 
@@ -161,7 +163,7 @@ def main() -> Path:
             preserveAspectRatio=True,
             mask="auto",
         )
-        y -= (draw_h + 12)
+        y -= draw_h + 12
 
     for line in lines:
         # Render de imágenes Markdown: ![alt](figures/x.png)

@@ -22,6 +22,7 @@ from .utils import ensure_dirs
 
 from .utils import project_root
 
+
 def main() -> Path:
     """
     Ejecuta la integración/selección y escribe adult_selected.csv.
@@ -59,6 +60,7 @@ def main() -> Path:
     df.to_csv(out_csv, index=False)
     print(f"[integrate_select] Wrote: {out_csv} ({len(df)} rows)")
     return out_csv
+
 
 if __name__ == "__main__":
     main()

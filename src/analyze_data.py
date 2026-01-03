@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -44,7 +44,6 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 from .utils import ensure_dirs, load_project_config
-from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 
 @dataclass(frozen=True)
@@ -77,6 +76,7 @@ class HypothesisTest:
     p_value: float
     ci_mean_diff_lo: float
     ci_mean_diff_hi: float
+
 
 @dataclass(frozen=True)
 class ClusterResult:
@@ -185,6 +185,7 @@ def _supervised(
         tp=tp,
     )
 
+
 def bootstrap_ci_mean_diff(
     g0: pd.Series,
     g1: pd.Series,
@@ -230,6 +231,7 @@ def bootstrap_ci_mean_diff(
     lo = float(np.quantile(diffs, alpha / 2))
     hi = float(np.quantile(diffs, 1 - alpha / 2))
     return lo, hi
+
 
 def _hypothesis_test(df: pd.DataFrame) -> HypothesisTest:
     y = _binary_target(df)
@@ -327,10 +329,10 @@ def main() -> Path:
 
     in_csv = processed_dir / "adult_clean.csv"
     df = _load_data(in_csv)
-    
+
     fig_dir = reports_dir / "figures"
     fig_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # 1) Distribución de hours_per_week por clase (histograma)
     if "hours_per_week" in df.columns and "income" in df.columns:
         plt.figure()
@@ -345,28 +347,32 @@ def main() -> Path:
         plt.tight_layout()
         plt.savefig(fig_dir / "hours_per_week_by_income.png", dpi=160)
         plt.close()
-    
+
     # 2) Proporción de education por clase (top 10 categorías)
     if "education" in df.columns and "income" in df.columns:
         tmp = df.copy()
         tmp["income"] = tmp["income"].astype(str).str.strip()
         top_edu = tmp["education"].astype(str).value_counts().head(10).index
-    
+
         ctab = (
             tmp[tmp["education"].astype(str).isin(top_edu)]
             .groupby(["education", "income"])
             .size()
             .unstack(fill_value=0)
         )
-    
+
         # normalizar por education para ver proporciones dentro de cada categoría
         ctab_prop = ctab.div(ctab.sum(axis=1), axis=0)
-    
+
         plt.figure(figsize=(9, 4))
         x = range(len(ctab_prop.index))
-        y0 = ctab_prop.get("<=50K", pd.Series([0]*len(ctab_prop), index=ctab_prop.index)).values
-        y1 = ctab_prop.get(">50K", pd.Series([0]*len(ctab_prop), index=ctab_prop.index)).values
-    
+        y0 = ctab_prop.get(
+            "<=50K", pd.Series([0] * len(ctab_prop), index=ctab_prop.index)
+        ).values
+        y1 = ctab_prop.get(
+            ">50K", pd.Series([0] * len(ctab_prop), index=ctab_prop.index)
+        ).values
+
         plt.bar(x, y0, label="<=50K")
         plt.bar(x, y1, bottom=y0, label=">50K")
         plt.xticks(list(x), list(ctab_prop.index), rotation=30, ha="right")
@@ -376,7 +382,7 @@ def main() -> Path:
         plt.tight_layout()
         plt.savefig(fig_dir / "education_income_proportions.png", dpi=160)
         plt.close()
-    
+
     y = _binary_target(df)
     dist = _class_distribution(y)
 
