@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-run_all.py
+"""run_all.py.
 
 Orquestador del pipeline PRACT2.
 
@@ -24,8 +22,7 @@ from . import make_memoria_pdf
 
 
 def main() -> Path:
-    """
-    Ejecuta el pipeline end-to-end.
+    """Ejecuta el pipeline end-to-end.
 
     Returns
     -------

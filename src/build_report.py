@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-build_report.py
+"""build_report.py.
 
 Genera un reporte en Markdown con observaciones y conclusiones
 basadas en resultados reales del análisis.
@@ -55,9 +53,10 @@ def _members_block(cfg: Dict[str, Any]) -> str:
 
 
 def _contrib_table(cfg: Dict[str, Any]) -> str:
-    """
-    Tabla de contribuciones según el enunciado:
-    investigación previa, redacción, código, vídeo; firmada con iniciales.
+    """Tabla de contribuciones según el enunciado:
+
+    investigación previa, redacción, código, vídeo; firmada con
+    iniciales.
     """
     initials = cfg.get("members_initials", ["AA", "BB"])
     a = initials[0] if len(initials) >= 1 else "AA"
@@ -80,8 +79,7 @@ def _safe_read_csv(path: Path, **kwargs: Any) -> Optional[pd.DataFrame]:
 
 
 def main() -> Path:
-    """
-    Construye reports/report.md.
+    """Construye reports/report.md.
 
     Returns
     -------
@@ -102,13 +100,13 @@ def main() -> Path:
     cl_sil = float(cl_sil) if cl_sil is not None else float("nan")
 
     missing_before = pd.read_csv(tables_dir / "missing_before.csv", index_col=0)
-    #missing_after = pd.read_csv(tables_dir / "missing_after.csv", index_col=0)
-    #winsor = pd.read_csv(tables_dir / "winsor_caps.csv")
+    # missing_after = pd.read_csv(tables_dir / "missing_after.csv", index_col=0)
+    # winsor = pd.read_csv(tables_dir / "winsor_caps.csv")
 
     semantic_before = _safe_read_csv(
         tables_dir / "semantic_missing_before.csv", index_col=0
     )
-    #semantic_after = _safe_read_csv(tables_dir / "semantic_missing_after.csv", index_col=0)
+    # semantic_after = _safe_read_csv(tables_dir / "semantic_missing_after.csv", index_col=0)
 
     cls_rep = _safe_read_csv(tables_dir / "classification_report.csv", index_col=0)
 
@@ -399,9 +397,7 @@ def main() -> Path:
         f"**Modelo supervisado (Regresión logística):** ROC-AUC = "
         f"**{sup['roc_auc']:.4f}**, Accuracy = **{sup['accuracy']:.4f}**."
     )
-    md.append(
-        "Baseline (predecir siempre la clase mayoritaria): " f"**{maj_acc:.4f}**."
-    )
+    md.append(f"Baseline (predecir siempre la clase mayoritaria): **{maj_acc:.4f}**.")
     md.append(
         "Para la clase `>50K` (positiva): "
         f"Precision = **{sup['precision_pos']:.3f}**, "
@@ -560,7 +556,7 @@ def main() -> Path:
 
     # Conclusiones contraste (tomar del summary real)
     md.append(
-        f"- **Contraste de hipótesis**: se observan diferencias consistentes entre grupos en `{hyp.get('variable','hours_per_week')}`. "
+        f"- **Contraste de hipótesis**: se observan diferencias consistentes entre grupos en `{hyp.get('variable', 'hours_per_week')}`. "
         f"La diferencia de medias estimada es aproximadamente **{(hyp['mean1'] - hyp['mean0']):.2f}** horas/semana "
         f"(IC 95% bootstrap: **[{hyp['ci_mean_diff_lo']:.2f}, {hyp['ci_mean_diff_hi']:.2f}]**), con evidencia estadística muy fuerte."
     )

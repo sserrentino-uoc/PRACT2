@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-utils.py
+"""utils.py.
 
 Utilidades comunes para el proyecto PRACT2.
 """
@@ -15,8 +13,7 @@ from typing import Any, Dict, Tuple
 
 
 def project_root() -> Path:
-    """
-    Devuelve la ruta raíz del proyecto (dos niveles arriba de este archivo).
+    """Devuelve la ruta raíz del proyecto (dos niveles arriba de este archivo).
 
     Returns
     -------
@@ -27,8 +24,7 @@ def project_root() -> Path:
 
 
 def load_project_config() -> Dict[str, Any]:
-    """
-    Carga el archivo de configuración del proyecto.
+    """Carga el archivo de configuración del proyecto.
 
     Returns
     -------
@@ -40,8 +36,7 @@ def load_project_config() -> Dict[str, Any]:
 
 
 def ensure_dirs() -> Tuple[Path, Path, Path, Path]:
-    """
-    Asegura la existencia de directorios principales.
+    """Asegura la existencia de directorios principales.
 
     Returns
     -------

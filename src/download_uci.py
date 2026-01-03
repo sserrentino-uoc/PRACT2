@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-download_uci.py
+"""download_uci.py.
 
 Genera el CSV crudo del dataset Adult (train+test) en:
 - data/raw/adult_raw.csv
@@ -52,8 +50,7 @@ COLUMNS = [
 
 
 def _read_uci_text(url: str) -> str:
-    """
-    Lee un recurso de texto remoto (UCI) y lo decodifica.
+    """Lee un recurso de texto remoto (UCI) y lo decodifica.
 
     Parameters
     ----------
@@ -71,8 +68,7 @@ def _read_uci_text(url: str) -> str:
 
 
 def _parse_adult_text(text: str, is_test: bool) -> pd.DataFrame:
-    """
-    Parsea el texto del dataset Adult en un DataFrame.
+    """Parsea el texto del dataset Adult en un DataFrame.
 
     Parameters
     ----------
@@ -101,8 +97,7 @@ def _parse_adult_text(text: str, is_test: bool) -> pd.DataFrame:
 
 
 def _load_from_zip(zip_path: Path) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Carga adult.data y adult.test desde un ZIP local.
+    """Carga adult.data y adult.test desde un ZIP local.
 
     Parameters
     ----------
@@ -136,8 +131,7 @@ def _load_from_zip(zip_path: Path) -> Tuple[pd.DataFrame, pd.DataFrame]:
 def _load_local_files(
     train_path: Path, test_path: Path
 ) -> Tuple[pd.DataFrame, pd.DataFrame]:
-    """
-    Carga archivos adult.data y adult.test locales.
+    """Carga archivos adult.data y adult.test locales.
 
     Parameters
     ----------

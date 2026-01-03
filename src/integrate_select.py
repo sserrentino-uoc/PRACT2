@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-integrate_select.py
+"""integrate_select.py.
 
 Etapa 2: integración/selección.
 Entrada: data/raw/adult_raw.csv
@@ -24,8 +22,7 @@ from .utils import project_root
 
 
 def main() -> Path:
-    """
-    Ejecuta la integración/selección y escribe adult_selected.csv.
+    """Ejecuta la integración/selección y escribe adult_selected.csv.
 
     Returns
     -------

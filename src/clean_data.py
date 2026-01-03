@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-clean_data.py
+"""clean_data.py.
 
 Etapa 3: limpieza del dataset.
 Entrada: data/processed/adult_selected.csv
@@ -34,8 +32,7 @@ from .utils import ensure_dirs
 
 @dataclass(frozen=True)
 class WinsorCaps:
-    """
-    Contenedor para límites de winsorización.
+    """Contenedor para límites de winsorización.
 
     Attributes
     ----------
@@ -75,9 +72,7 @@ NUM_COLS = [
 
 
 def _missing_table(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Tabla de faltantes reales (NaN) por columna.
-    """
+    """Tabla de faltantes reales (NaN) por columna."""
     missing_count = df.isna().sum()
     missing_pct = (missing_count / len(df)) * 100
     out = pd.DataFrame({"missing_count": missing_count, "missing_pct": missing_pct})
@@ -85,8 +80,8 @@ def _missing_table(df: pd.DataFrame) -> pd.DataFrame:
 
 
 def _semantic_missing_table(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
-    """
-    Tabla de faltantes semánticos por columna (incluye '?', vacío, 'nan', 'None').
+    """Tabla de faltantes semánticos por columna (incluye '?', vacío, 'nan',
+    'None').
 
     Nota: No requiere que el valor sea NaN; detecta strings equivalentes a faltante.
     """
@@ -103,8 +98,7 @@ def _semantic_missing_table(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
 
 
 def _clean_cat(series: pd.Series) -> pd.Series:
-    """
-    Limpia una serie categórica y resuelve faltantes.
+    """Limpia una serie categórica y resuelve faltantes.
 
     Convierte: '?', '', 'nan' (string) y NA reales a NA y luego a 'Unknown'.
     """
@@ -115,9 +109,7 @@ def _clean_cat(series: pd.Series) -> pd.Series:
 
 
 def _impute_numeric(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
-    """
-    Imputa variables numéricas con la mediana.
-    """
+    """Imputa variables numéricas con la mediana."""
     out = df.copy()
     for col in cols:
         out[col] = pd.to_numeric(out[col], errors="coerce")
@@ -129,9 +121,7 @@ def _impute_numeric(df: pd.DataFrame, cols: List[str]) -> pd.DataFrame:
 def _winsorize(
     df: pd.DataFrame, col: str, q: float = 0.995
 ) -> Tuple[pd.DataFrame, WinsorCaps]:
-    """
-    Winsoriza superiormente una columna.
-    """
+    """Winsoriza superiormente una columna."""
     out = df.copy()
     cap = float(out[col].quantile(q))
     n_capped = int((out[col] > cap).sum())
@@ -140,8 +130,7 @@ def _winsorize(
 
 
 def main() -> Path:
-    """
-    Ejecuta la limpieza y escribe adult_clean.csv.
+    """Ejecuta la limpieza y escribe adult_clean.csv.
 
     Returns
     -------

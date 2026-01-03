@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-analyze_data.py
+"""analyze_data.py.
 
 Etapa 4: análisis estadístico.
 Entrada: data/processed/adult_clean.csv
@@ -312,8 +310,7 @@ def _clustering(
 
 
 def main() -> Path:
-    """
-    Ejecuta el análisis y genera summary.json.
+    """Ejecuta el análisis y genera summary.json.
 
     Returns
     -------

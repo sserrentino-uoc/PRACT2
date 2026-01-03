@@ -1,8 +1,6 @@
 # Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
 # Licensed under the MIT License. See LICENSE for details.
-
-"""
-make_memoria_pdf.py
+"""make_memoria_pdf.py.
 
 Convierte reports/report.md a un PDF simple (memoria) usando reportlab.
 
@@ -32,9 +30,7 @@ from .utils import ensure_dirs
 
 
 def _wrap_line(text: str, max_width: float, font: str, size: int) -> List[str]:
-    """
-    Divide una línea en múltiples líneas según ancho máximo.
-    """
+    """Divide una línea en múltiples líneas según ancho máximo."""
     if not text:
         return [""]
 
@@ -58,8 +54,9 @@ def _wrap_line(text: str, max_width: float, font: str, size: int) -> List[str]:
 def _wrap_preserving_pipes(
     line: str, max_width: float, font: str, size: int
 ) -> List[str]:
-    """
-    Wrap para líneas de tabla Markdown sin romper de forma agresiva la estructura.
+    """Wrap para líneas de tabla Markdown sin romper de forma agresiva la
+    estructura.
+
     Estrategia: wrap por ancho, pero si excede y no hay espacios suficientes,
     fuerza corte por longitud aproximada.
     """
@@ -79,9 +76,7 @@ def _wrap_preserving_pipes(
 
 
 def main() -> Path:
-    """
-    Genera reports/memoria.pdf desde reports/report.md.
-    """
+    """Genera reports/memoria.pdf desde reports/report.md."""
     _, _, reports_dir, _ = ensure_dirs()
     md_path = reports_dir / "report.md"
     pdf_path = reports_dir / "memoria.pdf"
@@ -114,9 +109,7 @@ def main() -> Path:
             y -= leading
 
     def draw_table_line(text: str) -> None:
-        """
-        Dibuja una línea de tabla Markdown en monoespaciado con wrap.
-        """
+        """Dibuja una línea de tabla Markdown en monoespaciado con wrap."""
         nonlocal y
         font = "Courier"
         size = 7
@@ -132,8 +125,8 @@ def main() -> Path:
             y -= leading
 
     def draw_image(rel_path: str) -> None:
-        """
-        Inserta una imagen referenciada desde el Markdown.
+        """Inserta una imagen referenciada desde el Markdown.
+
         rel_path se interpreta relativo a reports/.
         """
         nonlocal y
