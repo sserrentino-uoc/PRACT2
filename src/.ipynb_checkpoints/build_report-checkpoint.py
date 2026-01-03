@@ -33,14 +33,53 @@ from .utils import ensure_dirs, load_project_config
 
 
 def _pct(x: float) -> str:
+    """
+    Formatea una proporción [0,1] como porcentaje con 2 decimales.
+
+    Parameters
+    ----------
+    x : float
+        Proporción (p. ej., 0.153).
+
+    Returns
+    -------
+    str
+        Porcentaje formateado (p. ej., '15.30%').
+    """
     return f"{100.0 * x:.2f}%"
 
 
 def _load_summary(path: Path) -> Dict[str, Any]:
+    """
+    Carga el archivo `summary.json` generado por el análisis.
+
+    Parameters
+    ----------
+    path : Path
+        Ruta al JSON.
+
+    Returns
+    -------
+    Dict[str, Any]
+        Contenido parseado del JSON como diccionario.
+    """
     return json.loads(path.read_text(encoding="utf-8"))
 
 
 def _members_block(cfg: Dict[str, Any]) -> str:
+    """
+    Construye el bloque Markdown con integrantes y enlaces (repo/video).
+
+    Parameters
+    ----------
+    cfg : Dict[str, Any]
+        Config del proyecto (se espera `members`, `repo_url`, `video_url`).
+
+    Returns
+    -------
+    str
+        Bloque Markdown listo para incluir en el reporte.
+    """
     members = cfg.get("members", [])
     repo_url = cfg.get("repo_url", "PENDIENTE")
     video_url = cfg.get("video_url", "PENDIENTE")
@@ -74,6 +113,23 @@ def _contrib_table(cfg: Dict[str, Any]) -> str:
 
 
 def _safe_read_csv(path: Path, **kwargs: Any) -> Optional[pd.DataFrame]:
+    """
+    Lee un CSV si existe; si no, retorna None.
+
+    Útil para tablas opcionales que pueden no haberse generado en todas las corridas.
+
+    Parameters
+    ----------
+    path : Path
+        Ruta al CSV.
+    **kwargs : Any
+        Argumentos pasados a `pandas.read_csv`.
+
+    Returns
+    -------
+    Optional[pd.DataFrame]
+        DataFrame si el archivo existe, en caso contrario None.
+    """
     if not path.exists():
         return None
     return pd.read_csv(path, **kwargs)

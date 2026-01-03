@@ -92,11 +92,39 @@ def main() -> Path:
     img_re = re.compile(r"!\[.*?\]\((.*?)\)")
 
     def new_page() -> None:
+        """
+        Inicia una nueva página en el PDF y reinicia el cursor vertical.
+    
+        Side effects
+        ------------
+        - Llama a `canvas.showPage()`.
+        - Resetea `y` al tope utilizable (height - margin_y).
+        """
         nonlocal y
         canvas.showPage()
         y = height - margin_y
 
     def draw_text(text: str, font: str, size: int, leading: int) -> None:
+        """
+        Dibuja un texto con wrap respetando el ancho útil y el margen inferior.
+    
+        Parameters
+        ----------
+        text : str
+            Texto a renderizar.
+        font : str
+            Nombre de fuente registrada en ReportLab (p. ej., 'Helvetica').
+        size : int
+            Tamaño de fuente.
+        leading : int
+            Interlineado (en puntos).
+    
+        Side effects
+        ------------
+        - Escribe texto en el `canvas`.
+        - Disminuye `y` según el interlineado.
+        - Si no hay espacio, crea una nueva página automáticamente.
+        """
         nonlocal y
         canvas.setFont(font, size)
         max_w = width - 2 * margin_x

@@ -1,5 +1,6 @@
-"""
-make_memoria_pdf.py
+# Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
+# Licensed under the MIT License. See LICENSE for details.
+"""make_memoria_pdf.py.
 
 Convierte reports/report.md a un PDF simple (memoria) usando reportlab.
 
@@ -29,9 +30,7 @@ from .utils import ensure_dirs
 
 
 def _wrap_line(text: str, max_width: float, font: str, size: int) -> List[str]:
-    """
-    Divide una línea en múltiples líneas según ancho máximo.
-    """
+    """Divide una línea en múltiples líneas según ancho máximo."""
     if not text:
         return [""]
 
@@ -52,9 +51,12 @@ def _wrap_line(text: str, max_width: float, font: str, size: int) -> List[str]:
     return lines
 
 
-def _wrap_preserving_pipes(line: str, max_width: float, font: str, size: int) -> List[str]:
-    """
-    Wrap para líneas de tabla Markdown sin romper de forma agresiva la estructura.
+def _wrap_preserving_pipes(
+    line: str, max_width: float, font: str, size: int
+) -> List[str]:
+    """Wrap para líneas de tabla Markdown sin romper de forma agresiva la
+    estructura.
+
     Estrategia: wrap por ancho, pero si excede y no hay espacios suficientes,
     fuerza corte por longitud aproximada.
     """
@@ -69,14 +71,12 @@ def _wrap_preserving_pipes(line: str, max_width: float, font: str, size: int) ->
     # Fallback: corte por caracteres aproximado
     avg_char_w = stringWidth("X", font, size) or 6.0
     max_chars = max(20, int(max_width / avg_char_w))
-    out = [line[i:i + max_chars] for i in range(0, len(line), max_chars)]
+    out = [line[i : i + max_chars] for i in range(0, len(line), max_chars)]
     return out
 
 
 def main() -> Path:
-    """
-    Genera reports/memoria.pdf desde reports/report.md.
-    """
+    """Genera reports/memoria.pdf desde reports/report.md."""
     _, _, reports_dir, _ = ensure_dirs()
     md_path = reports_dir / "report.md"
     pdf_path = reports_dir / "memoria.pdf"
@@ -92,11 +92,39 @@ def main() -> Path:
     img_re = re.compile(r"!\[.*?\]\((.*?)\)")
 
     def new_page() -> None:
+        """
+        Inicia una nueva página en el PDF y reinicia el cursor vertical.
+    
+        Side effects
+        ------------
+        - Llama a `canvas.showPage()`.
+        - Resetea `y` al tope utilizable (height - margin_y).
+        """
         nonlocal y
         canvas.showPage()
         y = height - margin_y
 
     def draw_text(text: str, font: str, size: int, leading: int) -> None:
+        """
+        Dibuja un texto con wrap respetando el ancho útil y el margen inferior.
+    
+        Parameters
+        ----------
+        text : str
+            Texto a renderizar.
+        font : str
+            Nombre de fuente registrada en ReportLab (p. ej., 'Helvetica').
+        size : int
+            Tamaño de fuente.
+        leading : int
+            Interlineado (en puntos).
+    
+        Side effects
+        ------------
+        - Escribe texto en el `canvas`.
+        - Disminuye `y` según el interlineado.
+        - Si no hay espacio, crea una nueva página automáticamente.
+        """
         nonlocal y
         canvas.setFont(font, size)
         max_w = width - 2 * margin_x
@@ -109,9 +137,7 @@ def main() -> Path:
             y -= leading
 
     def draw_table_line(text: str) -> None:
-        """
-        Dibuja una línea de tabla Markdown en monoespaciado con wrap.
-        """
+        """Dibuja una línea de tabla Markdown en monoespaciado con wrap."""
         nonlocal y
         font = "Courier"
         size = 7
@@ -127,8 +153,8 @@ def main() -> Path:
             y -= leading
 
     def draw_image(rel_path: str) -> None:
-        """
-        Inserta una imagen referenciada desde el Markdown.
+        """Inserta una imagen referenciada desde el Markdown.
+
         rel_path se interpreta relativo a reports/.
         """
         nonlocal y
@@ -158,7 +184,7 @@ def main() -> Path:
             preserveAspectRatio=True,
             mask="auto",
         )
-        y -= (draw_h + 12)
+        y -= draw_h + 12
 
     for line in lines:
         # Render de imágenes Markdown: ![alt](figures/x.png)

@@ -1,5 +1,6 @@
-"""
-analyze_data.py
+# Copyright (c) 2025 Serrentino Mangino, S., & Mochon Paredes, A.
+# Licensed under the MIT License. See LICENSE for details.
+"""analyze_data.py.
 
 Etapa 4: análisis estadístico.
 Entrada: data/processed/adult_clean.csv
@@ -19,7 +20,7 @@ from __future__ import annotations
 import json
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -41,7 +42,6 @@ from sklearn.cluster import KMeans
 from sklearn.metrics import silhouette_score
 
 from .utils import ensure_dirs, load_project_config
-from sklearn.model_selection import StratifiedKFold, cross_val_score
 
 
 @dataclass(frozen=True)
@@ -75,6 +75,7 @@ class HypothesisTest:
     ci_mean_diff_lo: float
     ci_mean_diff_hi: float
 
+
 @dataclass(frozen=True)
 class ClusterResult:
     """Resultado del análisis no supervisado."""
@@ -85,16 +86,58 @@ class ClusterResult:
 
 
 def _load_data(path: Path) -> pd.DataFrame:
+    """
+    Carga el dataset procesado desde CSV y normaliza la columna objetivo.
+
+    Parameters
+    ----------
+    path : Path
+        Ruta al CSV con los datos a analizar.
+
+    Returns
+    -------
+    pd.DataFrame
+        DataFrame con la columna `income` recortada (strip) y en dtype string.
+    """
     df = pd.read_csv(path)
     df["income"] = df["income"].astype("string").str.strip()
     return df
 
 
 def _binary_target(df: pd.DataFrame) -> pd.Series:
+    """
+    Construye la variable objetivo binaria a partir de la columna `income`.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        DataFrame que contiene la columna `income`.
+
+    Returns
+    -------
+    pd.Series
+        Serie binaria (0/1), donde 1 representa `>50K` y 0 el resto.
+    """
     return (df["income"] == ">50K").astype(int)
 
 
 def _class_distribution(y: pd.Series) -> Dict[str, Any]:
+    """
+    Calcula distribución de clases (conteos y proporciones) para un target binario.
+
+    Parameters
+    ----------
+    y : pd.Series
+        Serie con etiquetas (idealmente 0/1).
+
+    Returns
+    -------
+    Dict[str, Any]
+        Diccionario con:
+        - total: int
+        - counts: dict (conteos por clase)
+        - pct: dict (proporción por clase)
+    """
     counts = y.value_counts().to_dict()
     total = int(len(y))
     pct = {str(k): float(v / total) for k, v in counts.items()}
@@ -104,6 +147,32 @@ def _class_distribution(y: pd.Series) -> Dict[str, Any]:
 def _supervised(
     df: pd.DataFrame, figures_dir: Path, tables_dir: Path, random_state: int
 ) -> SupervisedMetrics:
+    """
+    Entrena y evalúa un clasificador supervisado (regresión logística) con pipeline.
+
+    Realiza:
+    - Preprocesamiento (StandardScaler para numéricas, OneHotEncoder para categóricas)
+    - Split estratificado train/test
+    - Entrenamiento del modelo
+    - Métricas: ROC-AUC, accuracy, precision/recall/F1 de clase positiva
+    - Artefactos: curva ROC (figura) y classification_report.csv (tabla)
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataset con columna objetivo `income`.
+    figures_dir : Path
+        Directorio donde se guardan figuras (p. ej., curva ROC).
+    tables_dir : Path
+        Directorio donde se guardan tablas (p. ej., classification_report.csv).
+    random_state : int
+        Semilla para reproducibilidad del split.
+
+    Returns
+    -------
+    SupervisedMetrics
+        Métricas calculadas y matriz de confusión.
+    """
     y = _binary_target(df)
     X = df.drop(columns=["income"]).copy()
 
@@ -182,6 +251,7 @@ def _supervised(
         tp=tp,
     )
 
+
 def bootstrap_ci_mean_diff(
     g0: pd.Series,
     g1: pd.Series,
@@ -228,7 +298,26 @@ def bootstrap_ci_mean_diff(
     hi = float(np.quantile(diffs, 1 - alpha / 2))
     return lo, hi
 
+
 def _hypothesis_test(df: pd.DataFrame) -> HypothesisTest:
+    """
+    Ejecuta un contraste de hipótesis entre grupos de ingreso usando `hours_per_week`.
+
+    - Define grupos por `income` (<=50K vs >50K).
+    - Aplica Mann–Whitney U (dos colas) sobre `hours_per_week`.
+    - Calcula un IC bootstrap para la diferencia de medias.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataset con columnas `income` y `hours_per_week`.
+
+    Returns
+    -------
+    HypothesisTest
+        Resultado del test (p-value) y estadísticos descriptivos por grupo,
+        incluyendo intervalo de confianza bootstrap para la diferencia de medias.
+    """
     y = _binary_target(df)
     x = pd.to_numeric(df["hours_per_week"], errors="coerce").fillna(0.0)
 
@@ -257,6 +346,33 @@ def _hypothesis_test(df: pd.DataFrame) -> HypothesisTest:
 def _clustering(
     df: pd.DataFrame, tables_dir: Path, random_state: int, sample_n: int
 ) -> ClusterResult:
+    """
+    Realiza clustering no supervisado sobre una muestra del dataset y perfila clusters.
+
+    Flujo:
+    - Muestrea `sample_n` filas (con semilla).
+    - Preprocesa (scaler + one-hot).
+    - Reduce dimensionalidad con PCA (n_components=10).
+    - Prueba k=2..6 y selecciona el mejor por silhouette.
+    - Genera perfil de cluster: tamaño y proporción de clase positiva (income_pos).
+      Se guarda como `cluster_profile.csv`.
+
+    Parameters
+    ----------
+    df : pd.DataFrame
+        Dataset con columna `income`.
+    tables_dir : Path
+        Directorio destino para `cluster_profile.csv`.
+    random_state : int
+        Semilla para muestreo, PCA y KMeans.
+    sample_n : int
+        Tamaño de muestra a utilizar (se trunca a len(df) si excede).
+
+    Returns
+    -------
+    ClusterResult
+        Tamaño de muestra efectivo, k seleccionado y silhouette asociado.
+    """
     # Muestreo para escalabilidad
     if sample_n > len(df):
         sample_n = len(df)
@@ -307,8 +423,7 @@ def _clustering(
 
 
 def main() -> Path:
-    """
-    Ejecuta el análisis y genera summary.json.
+    """Ejecuta el análisis y genera summary.json.
 
     Returns
     -------
@@ -324,10 +439,10 @@ def main() -> Path:
 
     in_csv = processed_dir / "adult_clean.csv"
     df = _load_data(in_csv)
-    
+
     fig_dir = reports_dir / "figures"
     fig_dir.mkdir(parents=True, exist_ok=True)
-    
+
     # 1) Distribución de hours_per_week por clase (histograma)
     if "hours_per_week" in df.columns and "income" in df.columns:
         plt.figure()
@@ -342,28 +457,32 @@ def main() -> Path:
         plt.tight_layout()
         plt.savefig(fig_dir / "hours_per_week_by_income.png", dpi=160)
         plt.close()
-    
+
     # 2) Proporción de education por clase (top 10 categorías)
     if "education" in df.columns and "income" in df.columns:
         tmp = df.copy()
         tmp["income"] = tmp["income"].astype(str).str.strip()
         top_edu = tmp["education"].astype(str).value_counts().head(10).index
-    
+
         ctab = (
             tmp[tmp["education"].astype(str).isin(top_edu)]
             .groupby(["education", "income"])
             .size()
             .unstack(fill_value=0)
         )
-    
+
         # normalizar por education para ver proporciones dentro de cada categoría
         ctab_prop = ctab.div(ctab.sum(axis=1), axis=0)
-    
+
         plt.figure(figsize=(9, 4))
         x = range(len(ctab_prop.index))
-        y0 = ctab_prop.get("<=50K", pd.Series([0]*len(ctab_prop), index=ctab_prop.index)).values
-        y1 = ctab_prop.get(">50K", pd.Series([0]*len(ctab_prop), index=ctab_prop.index)).values
-    
+        y0 = ctab_prop.get(
+            "<=50K", pd.Series([0] * len(ctab_prop), index=ctab_prop.index)
+        ).values
+        y1 = ctab_prop.get(
+            ">50K", pd.Series([0] * len(ctab_prop), index=ctab_prop.index)
+        ).values
+
         plt.bar(x, y0, label="<=50K")
         plt.bar(x, y1, bottom=y0, label=">50K")
         plt.xticks(list(x), list(ctab_prop.index), rotation=30, ha="right")
@@ -373,7 +492,7 @@ def main() -> Path:
         plt.tight_layout()
         plt.savefig(fig_dir / "education_income_proportions.png", dpi=160)
         plt.close()
-    
+
     y = _binary_target(df)
     dist = _class_distribution(y)
 
